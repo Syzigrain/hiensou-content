@@ -1,0 +1,12 @@
+{
+  "name": "hiensou-content",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "manager": "node manager/server.mjs"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "gray-matter": "^4.0.3"
+  }
+}

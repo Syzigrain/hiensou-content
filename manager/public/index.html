@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiensou 文章管理器</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="bg-neutral-50">
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header-title">Hiensou 文章管理器</h1>
+    <nav class="tabs" id="tab-bar">
+      <button class="tab active" data-tab="posts">文章</button>
+      <button class="tab" data-tab="essays">随笔</button>
+      <button class="tab" data-tab="spec">页面</button>
+      <button class="tab" data-tab="gallery">相册</button>
+      <button class="tab" data-tab="series">系列</button>
+    </nav>
+  </header>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button class="btn btn-primary" id="btn-new">+ 新建</button>
+    <button class="btn btn-secondary" id="btn-organize" style="display:none">📂 按分类整理</button>
+    <div class="toolbar-right">
+      <button class="btn btn-primary" id="btn-push" style="background:#22c55e">推送</button>
+      <label class="checkbox-label">
+        <input type="checkbox" id="filter-draft"> 仅草稿
+      </label>
+      <input type="text" class="search-input" id="search-input" placeholder="搜索标题...">
+    </div>
+  </div>
+
+  <!-- Article list -->
+  <main class="article-list" id="article-list"></main>
+
+  <!-- Edit modal (hidden by default) -->
+  <div class="modal-overlay" id="modal-overlay" style="display:none">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">新建文章</h2>
+        <button class="modal-close" id="btn-close">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel">取消</button>
+        <button class="btn btn-danger" id="btn-delete-modal" style="display:none">删除</button>
+        <button class="btn btn-primary" id="btn-save">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

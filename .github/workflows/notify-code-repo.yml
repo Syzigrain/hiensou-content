@@ -1,0 +1,14 @@
+name: Trigger Blog Rebuild
+
+# When content is pushed to main, trigger Vercel to rebuild the blog
+on:
+  push:
+    branches: [main]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deployment
+        run: |
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
