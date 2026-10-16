@@ -1,14 +1,43 @@
 name: Trigger Blog Rebuild
 
-# When content is pushed to main, trigger Vercel to rebuild the blog
+# 内容仓库推送到 main 时，触发 Cloudflare Workers Builds 重新构建博客。
+#
+# 完整链路：
+#   本仓库 push
+#     → 本 workflow
+#     → POST Cloudflare Deploy Hook
+#     → Cloudflare 重新构建代码仓库 hiensou-blog
+#     → 构建时 sync-content.ts 重新 clone 本仓库
+#     → 新文章上线
+#
+# 需要配置的仓库 Secret（Settings → Secrets and variables → Actions）：
+#   CLOUDFLARE_DEPLOY_HOOK_URL
+#   获取方式：Cloudflare → Workers & Pages → hiensou-blog
+#             → Settings → Builds → Deploy Hooks → Create → 复制 URL
+#   该 URL 本身就是凭证，不需要额外的 Authorization 头。
+
 on:
   push:
     branches: [main]
+  # 也支持在 Actions 页面手动触发，方便单独测试 hook 是否配置正确
+  workflow_dispatch:
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel deployment
+      - name: Trigger Cloudflare Workers build
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
         run: |
-          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
+          if [ -z "$DEPLOY_HOOK_URL" ]; then
+            echo "::error::未配置 secret CLOUDFLARE_DEPLOY_HOOK_URL"
+            echo "请到本仓库 Settings → Secrets and variables → Actions 添加，"
+            echo "值为 Cloudflare Worker 的 Deploy Hook URL。"
+            exit 1
+          fi
+
+          echo "正在触发 Cloudflare 构建..."
+          curl -sS --fail-with-body -X POST "$DEPLOY_HOOK_URL" -w '\nHTTP %{http_code}\n'
+
+          echo "构建已触发。进度查看：Cloudflare → Workers & Pages → hiensou-blog → Deployments"
